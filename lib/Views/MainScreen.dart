@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:zealth_assignment/ViewModels/BaseModel.dart';
 import 'package:zealth_assignment/ViewModels/ConnectivityProvider.dart';
@@ -31,142 +34,153 @@ class _MainScreenState extends State<MainScreen> {
     final double width = MediaQuery.of(context).size.width;
 
     return Consumer<ConnectivityProvider>(
-      builder: (context, connection, child) {
-        return connection.isOnline
-            ? child ?? Text('Error')
-            : Scaffold(
-                body: Container(
-                  height: height,
-                  child: Center(
-                    child: Text(
-                      'No Internet Connection',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-      },
-      child: Scaffold(
-        drawer: drawer(),
-        floatingActionButton: Consumer<MainViewModel>(
-          builder: (BuildContext context, MainViewModel model, Widget? child) {
-            return model.viewState == ViewState.Busy
-                ? ColoredButton(text: "Loading...", callback: () {})
-                : ColoredButton(
-                    text: "Show Image",
-                    callback: () async {
-                      await model.getImages();
-                      Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) {
-                        return ImageScreen();
-                      }));
-                    },
-                  );
-          },
-        ),
-        body: SafeArea(
-          top: true,
-          child: Consumer<MainViewModel>(
-            builder: (context, model, child) {
-              return Container(
-                color: model.screenColor ?? Colors.grey,
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-                height: height,
-                width: width,
-                child: child,
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(flex: 1, child: SizedBox()),
-                    Expanded(
-                      flex: 5,
-                      child: Center(
-                        child: Container(
-                          height: height * 0.25,
-                          child: Text(
-                            'Zealth',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
+        builder: (context, connection, child) {
+          return connection.isOnline
+              ? child ?? Text('Error')
+              : Scaffold(
+                  body: Container(
+                    height: height,
+                    child: Center(
+                      child: Text(
+                        'No Internet Connection',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                     ),
-                    Expanded(
-                        flex: 1,
-                        child: IconButton(
-                          padding: EdgeInsets.all(10),
-                          icon: Icon(
-                            Icons.account_circle_rounded,
-                            color: Colors.black,
-                          ),
-                          iconSize: 35,
-                          onPressed: () {
-                            Navigator.of(context).push(new MaterialPageRoute(
-                                builder: (BuildContext context) {
-                              return ProfileScreen();
-                            }));
-                          },
-                        )),
-                  ],
-                ),
-                Container(
-                  height: height * 0.1,
-                ),
-                Container(
-                    height: height * 0.5,
-                    child: Consumer<MainViewModel>(
-                        builder: (BuildContext context, model, Widget? child) {
-                      return Column(
-                        children: [
-                          //The first time the app will be launched, set the default date to 01-01-2000. On the subsequent
-                          // launches of the app, make sure to show the input given by the user during the last use.
-                          Text(
-                            "${model.date.year}-${model.date.month}-${model.date.day}",
-                            style: TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                  ),
+                );
+        },
+        child: WillPopScope(
+          onWillPop: () async {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else if (Platform.isIOS) {
+              exit(0);
+            }
+            return false;
+          },
+          child: Scaffold(
+            drawer: drawer(),
+            floatingActionButton: Consumer<MainViewModel>(
+              builder:
+                  (BuildContext context, MainViewModel model, Widget? child) {
+                return model.viewState == ViewState.Busy
+                    ? ColoredButton(text: "Loading...", callback: () {})
+                    : ColoredButton(
+                        text: "Show Image",
+                        callback: () async {
+                          await model.getImages();
+                          Navigator.of(context).push(new MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return ImageScreen();
+                          }));
+                        },
+                      );
+              },
+            ),
+            body: SafeArea(
+              top: true,
+              child: Consumer<MainViewModel>(
+                builder: (context, model, child) {
+                  return Container(
+                    color: model.screenColor ?? Colors.grey,
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+                    height: height,
+                    width: width,
+                    child: child,
+                  );
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(flex: 1, child: SizedBox()),
+                        Expanded(
+                          flex: 5,
+                          child: Center(
+                            child: Container(
+                              height: height * 0.25,
+                              child: Text(
+                                'Zealth',
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
                           ),
-                          ColoredButton(
-                            size: 26,
-                            text: "Choose a Date",
-                            callback: () async {
-                              showModelDatePicker(
-                                  context, model, false, height, width);
+                        ),
+                        Expanded(
+                            flex: 1,
+                            child: IconButton(
+                              padding: EdgeInsets.all(10),
+                              icon: Icon(
+                                Icons.account_circle_rounded,
+                                color: Colors.black,
+                              ),
+                              iconSize: 35,
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                    new MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                  return ProfileScreen();
+                                }));
+                              },
+                            )),
+                      ],
+                    ),
+                    Container(
+                      height: height * 0.1,
+                    ),
+                    Container(
+                        height: height * 0.5,
+                        child: Consumer<MainViewModel>(builder:
+                            (BuildContext context, model, Widget? child) {
+                          return Column(
+                            children: [
+                              //The first time the app will be launched, set the default date to 01-01-2000. On the subsequent
+                              // launches of the app, make sure to show the input given by the user during the last use.
+                              Text(
+                                "${model.date.year}-${model.date.month}-${model.date.day}",
+                                style: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              ColoredButton(
+                                size: 26,
+                                text: "Choose a Date",
+                                callback: () async {
+                                  showModelDatePicker(
+                                      context, model, false, height, width);
 
-                              /// Could have made the date picker show in the pdf
-                              /// but it would have required to have 3 listviews
-                              /// and each listview value would change the values of other two
-                              /// As this was not compulsory i didn't added it.
-                              /// But if it is required i will add on the request.
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      );
-                    })),
-              ],
+                                  /// Could have made the date picker show in the pdf
+                                  /// but it would have required to have 3 listviews
+                                  /// and each listview value would change the values of other two
+                                  /// As this was not compulsory i didn't added it.
+                                  /// But if it is required i will add on the request.
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          );
+                        })),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget drawer() {

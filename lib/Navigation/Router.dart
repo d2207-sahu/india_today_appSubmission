@@ -19,7 +19,8 @@ class Routers {
         return MaterialPageRoute(
             builder: (BuildContext context) => ProfileScreen());
       default:
-        return MaterialPageRoute(builder: (context) => ErrorPage());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => MainScreen());
     }
   }
 }
