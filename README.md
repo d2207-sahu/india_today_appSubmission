@@ -18,7 +18,8 @@ Service -> Handles the transaction between server and the app
 ### For saving recent Date
 I have used Shared Preferences for the Android app.
 
-A few link to contact me:
+## Contact Me
+###A few link to contact me:
 - [LinkedInLink](https://www.linkedin.com/in/divyanshusahu2207/)
 - [GithubLink](https://github.com/d2207-sahu)
 - [StackOverflowLink](https://stackoverflow.com/users/13139719/divyanshu-sahu)
