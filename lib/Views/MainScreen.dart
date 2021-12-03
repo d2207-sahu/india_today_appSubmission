@@ -145,7 +145,16 @@ class _MainScreenState extends State<MainScreen> {
                             callback: () async {
                               showModelDatePicker(
                                   context, model, height, width);
+
+                              /// Could have made the date picker show in the pdf
+                              /// but it would have required to have 3 listviews
+                              /// and each listview value would change the values of other two
+                              /// As this was not compulsory i didn't added it.
+                              /// But if it is required i will add on the request.
                             },
+                          ),
+                          SizedBox(
+                            height: 10,
                           ),
                         ],
                       );

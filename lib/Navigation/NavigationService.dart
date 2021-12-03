@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Not used this, getting error.
+/// Have to migrate this logic to dart 2.0 with null safety.
 class NavigationService {
   final GlobalKey<NavigatorState> globalKey = GlobalKey<NavigatorState>();
 

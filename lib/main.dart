@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'Constant.dart';
 import 'Navigation/Router.dart';
@@ -9,6 +12,15 @@ import 'locator.dart';
 void main() {
   setupLocator();
   runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.black,
+    statusBarIconBrightness: Brightness.light,
+    // statusBarBrightness:
+    //     Platform.isAndroid ? Brightness.dark : Brightness.light,
+    systemNavigationBarColor: Colors.black,
+    systemNavigationBarDividerColor: Colors.blue,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
 }
 
 class MyApp extends StatelessWidget {

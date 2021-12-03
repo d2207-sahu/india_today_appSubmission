@@ -1,4 +1,3 @@
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zealth_assignment/Models/ImageModel.dart';
@@ -13,7 +12,7 @@ class MainViewModel extends BaseModel {
 
   /// date - 21, month - 12, year - 2000
   /// day - 2000-12-21 | as required by NASA api
-  int? day, month, year;
+  int day = 01, month = 01, year = 2000;
   DateTime date = DateTime(2000, 01, 01);
   Color? screenColor = Colors.black12;
   ImageModel _imageModel = ImageModel("explanation", "title", "hdurl", "url",
@@ -28,6 +27,19 @@ class MainViewModel extends BaseModel {
     _imageModel = imageModel;
     setIdle();
     return imageModel;
+  }
+
+  updateCustomDate({int? month, int? year, int? day}) async {
+    month == null ? print("") : this.month = month;
+    year == null ? print("") : this.year = year;
+    day == null ? print("") : this.day = day;
+    DateTime date = DateTime(this.year, this.month, this.day);
+    this.date = date;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("recentDate", date.toString());
+    String nameOfDay = DateFormat('EEEE').format(this.date);
+    updateColor(nameOfDay);
+    notifyListeners();
   }
 
   resetDate() async {
