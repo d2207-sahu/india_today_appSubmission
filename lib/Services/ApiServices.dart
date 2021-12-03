@@ -7,6 +7,14 @@ import 'package:zealth_assignment/Models/ImageModel.dart';
 class ApiServices {
   final String _api_key = 'HcqImNpixLX1bmqKQ5IMf61GgBrrM9J2VxqcjaIQ';
 
+  //  final response = await http.get(
+  //     Uri.parse(
+  //      'https://api.nasa.gov/planetary/apod?api_key=HcqImNpixLX1bmqKQ5IMf61GgBrrM9J2VxqcjaIQ&date=${date.year}-$month-$day'),
+  //  );
+  //  dynamic data = jsonDecode(response.body);
+  //  print(response.statusCode);
+  //  print(response.body);
+
   Future<ImageModel> getImages(DateTime date) async {
     String day = date.day < 10 ? "0${date.day}" : "${date.day}";
     String month = date.month < 10 ? "0${date.month}" : "${date.month}";
@@ -43,6 +51,11 @@ class ApiServices {
         explain: "No Internet Connection",
         date: "${date.year}-$month-$day",
       );
+    } on HttpException {
+      return ImageModel.ofError(
+        explain: "HTTP Exception. Picture for the date not available.",
+        date: "${date.year}-$month-$day",
+      );
     } catch (e) {
       print(e);
       return ImageModel.ofError(
@@ -53,7 +66,7 @@ class ApiServices {
   }
 
   Future<Response> getData(String url) async {
-    File? file = await DefaultCacheManager().getSingleFile(url);
+    dynamic file = await DefaultCacheManager().getSingleFile(url);
     if (file != null && await file.exists()) {
       var res = await file.readAsString();
       print(res);

@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zealth_assignment/Models/ImageModel.dart';
 import 'package:zealth_assignment/ViewModels/BaseModel.dart';
 import 'package:zealth_assignment/ViewModels/MainViewModel.dart';
 
 import 'Widgets/ColorButton.dart';
+import 'Widgets/CustomDatePicker.dart';
 
 class ImageScreen extends StatefulWidget {
   const ImageScreen({Key? key}) : super(key: key);
@@ -69,10 +71,12 @@ class _ImageScreenState extends State<ImageScreen> {
                         Expanded(
                           flex: 5,
                           child: Container(
-                            height: height * 0.1,
+                            height: height * 0.125,
                             child: Center(
                               child: Text(
                                 'Picture of the Day',
+                                overflow: TextOverflow.fade,
+                                // maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -102,32 +106,41 @@ class _ImageScreenState extends State<ImageScreen> {
                                 : GestureDetector(
                                     onLongPress: () async {
                                       showModelDatePicker(
-                                          context, model, height, width);
+                                          context, model, true, height, width);
                                     },
-                                    child: CachedNetworkImage(
-                                      useOldImageOnUrlChange: true,
-                                      fit: BoxFit.cover,
-                                      imageUrl: imageModel.url ??
-                                          "https://apod.nasa.gov/apod/image/2112/NGC6822LRGB1024.jpg",
-                                      placeholder: (context, imageurl) =>
-                                          Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.4,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration:
-                                            BoxDecoration(color: Colors.grey),
+                                    child: Center(
+                                      child: CachedNetworkImage(
+                                        useOldImageOnUrlChange: true,
+                                        fit: BoxFit.cover,
+                                        imageUrl: imageModel.url ??
+                                            "https://apod.nasa.gov/apod/image/2112/NGC6822LRGB1024.jpg",
+                                        placeholder: (context, imageurl) =>
+                                            Shimmer.fromColors(
+                                                child: Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.4,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.grey),
+                                                ),
+                                                direction: ShimmerDirection.ltr,
+                                                baseColor: Colors.black38,
+                                                highlightColor: Colors.black26),
+                                        errorWidget:
+                                            (context, imageurl, error) {
+                                          print(error);
+                                          return Center(
+                                            child: Icon(
+                                              Icons.error,
+                                              size: 60,
+                                            ),
+                                          );
+                                        },
                                       ),
-                                      errorWidget: (context, imageurl, error) {
-                                        print(error);
-                                        return Center(
-                                          child: Icon(
-                                            Icons.error,
-                                            size: 60,
-                                          ),
-                                        );
-                                      },
                                     ),
                                   ),
                             SizedBox(
@@ -192,33 +205,5 @@ class _ImageScreenState extends State<ImageScreen> {
             )),
       ),
     );
-  }
-
-  void showModelDatePicker(context, MainViewModel model, height, width) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(
-                height: height * 0.4,
-                width: width,
-                child: Theme(
-                  data: ThemeData.light(),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: model.date,
-                    onDateTimeChanged: (date) async {
-                      print(date);
-                      model.updateDate(date);
-                      await model.getImages();
-                    },
-                  ),
-                ),
-              )
-            ],
-          );
-        });
   }
 }

@@ -8,6 +8,8 @@ import 'package:zealth_assignment/Views/ImageScreen.dart';
 import 'package:zealth_assignment/Views/ProfileScreen.dart';
 import 'package:zealth_assignment/Views/Widgets/ColorButton.dart';
 
+import 'Widgets/CustomDatePicker.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -144,7 +146,7 @@ class _MainScreenState extends State<MainScreen> {
                             text: "Choose a Date",
                             callback: () async {
                               showModelDatePicker(
-                                  context, model, height, width);
+                                  context, model, false, height, width);
 
                               /// Could have made the date picker show in the pdf
                               /// but it would have required to have 3 listviews
@@ -165,34 +167,6 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
-  }
-
-  void showModelDatePicker(context, MainViewModel model, height, width) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(
-                height: height * 0.4,
-                width: width,
-                child: Theme(
-                  data: ThemeData.light(),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: model.date,
-                    // backgroundColor: Colors.black,
-                    onDateTimeChanged: (date) {
-                      print(date);
-                      model.updateDate(date);
-                    },
-                  ),
-                ),
-              )
-            ],
-          );
-        });
   }
 
   Widget drawer() {
