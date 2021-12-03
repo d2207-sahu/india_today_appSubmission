@@ -47,6 +47,8 @@ class MainViewModel extends BaseModel {
     this.date = DateTime(2000, 01, 01);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("recentDate", date.toString());
+    String nameOfDay = DateFormat('EEEE').format(this.date);
+    updateColor(nameOfDay);
     setIdle();
     notifyListeners();
   }
