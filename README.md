@@ -4,9 +4,13 @@ Frontend Interview Assignment-Zealth
 
 ## State management
 User Provider Package.
+
 Views -> Dart Screen.
+
 ViewModel -> ChangeNotifier Class. Handles the state management.
+
 Model -> Coverts the JSON object to Dart Object.
+
 Service -> Handles the transaction between server and the app
 
 ## Offline Storage
