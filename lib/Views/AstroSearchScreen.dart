@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:zealth_assignment/Models/AstroModel.dart';
-import 'package:zealth_assignment/ViewModels/AstroViewModel.dart';
-import 'package:zealth_assignment/ViewModels/DailyPanchangViewModel.dart';
+import 'package:india_today/Models/AstroModel.dart';
+import 'package:india_today/ViewModels/AstroViewModel.dart';
+import 'package:india_today/ViewModels/DailyPanchangViewModel.dart';
 
 class AstroScreen extends StatefulWidget {
   const AstroScreen({Key? key}) : super(key: key);
@@ -17,7 +17,6 @@ class AstroScreen extends StatefulWidget {
 class _AstroScreenState extends State<AstroScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  final GlobalKey<PopupMenuButtonState> _menuKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +140,6 @@ class _AstroScreenState extends State<AstroScreen> {
                               AssetImage("assets/images/sort.png"),
                               color: Colors.orange,
                             ),
-                            key: _menuKey,
                             itemBuilder: (context) {
                               return [
                                 PopupMenuItem(

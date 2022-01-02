@@ -1,6 +1,6 @@
-import 'package:zealth_assignment/Models/AstroModel.dart';
-import 'package:zealth_assignment/Services/AstroService.dart';
-import 'package:zealth_assignment/ViewModels/BaseModel.dart';
+import 'package:india_today/Models/AstroModel.dart';
+import 'package:india_today/Services/AstroService.dart';
+import 'package:india_today/ViewModels/BaseModel.dart';
 
 import '../locator.dart';
 

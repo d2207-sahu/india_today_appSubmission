@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart';
-import 'package:zealth_assignment/Models/ImageModel.dart';
+import 'package:india_today/Models/ImageModel.dart';
 
 class ApiServices {
   final String _api_key = 'HcqImNpixLX1bmqKQ5IMf61GgBrrM9J2VxqcjaIQ';

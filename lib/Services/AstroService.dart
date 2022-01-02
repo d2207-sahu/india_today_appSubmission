@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:zealth_assignment/Models/AstroModel.dart';
+import 'package:india_today/Models/AstroModel.dart';
 
 class AstroService {
   Future<List<AstroModel>?> astroAPICall() async {

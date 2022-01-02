@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:zealth_assignment/Views/DailyPanchangScreen.dart';
-import 'package:zealth_assignment/Views/MainScreen.dart';
+import 'package:india_today/Views/DailyPanchangScreen.dart';
+import 'package:india_today/Views/MainScreen.dart';
 import '../Constant.dart';
 
 class Routers {

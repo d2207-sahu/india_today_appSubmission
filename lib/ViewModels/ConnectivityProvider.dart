@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/services.dart';
-import 'package:zealth_assignment/ViewModels/BaseModel.dart';
+import 'package:india_today/ViewModels/BaseModel.dart';
 
 class ConnectivityProvider extends BaseModel {
   Connectivity _connectivity = Connectivity();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:zealth_assignment/ViewModels/AstroViewModel.dart';
+import 'package:india_today/ViewModels/AstroViewModel.dart';
 import 'Constant.dart';
 import 'Navigation/Router.dart';
 import 'ViewModels/ConnectivityProvider.dart';

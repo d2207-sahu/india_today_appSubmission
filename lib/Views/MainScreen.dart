@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:zealth_assignment/ViewModels/ConnectivityProvider.dart';
-import 'package:zealth_assignment/ViewModels/MainViewModel.dart';
-import 'package:zealth_assignment/Views/AstroSearchScreen.dart';
-import 'package:zealth_assignment/Views/DailyPanchangScreen.dart';
+import 'package:india_today/ViewModels/ConnectivityProvider.dart';
+import 'package:india_today/ViewModels/MainViewModel.dart';
+import 'package:india_today/Views/AstroSearchScreen.dart';
+import 'package:india_today/Views/DailyPanchangScreen.dart';
 import 'Widgets/CustomBottomNavigationBar.dart';
 
 class MainScreen extends StatefulWidget {

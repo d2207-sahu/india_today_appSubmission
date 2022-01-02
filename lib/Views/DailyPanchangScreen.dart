@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zealth_assignment/ViewModels/BaseModel.dart';
-import 'package:zealth_assignment/ViewModels/DailyPanchangViewModel.dart';
+import 'package:india_today/ViewModels/BaseModel.dart';
+import 'package:india_today/ViewModels/DailyPanchangViewModel.dart';
 
 class DailyPanchangScreen extends StatefulWidget {
   const DailyPanchangScreen({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _DailyPanchangScreenState extends State<DailyPanchangScreen> {
   late Future locationFuture;
   final TextEditingController _textEditingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-
+  final GlobalKey<PopupMenuButtonState> _menuKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -75,7 +75,7 @@ class _DailyPanchangScreenState extends State<DailyPanchangScreen> {
                 ),
                 Container(
                   width: width,
-                  height: height * 0.25,
+                  height: height * 0.35,
                   margin:
                       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
                   child: Column(
@@ -174,6 +174,7 @@ class _DailyPanchangScreenState extends State<DailyPanchangScreen> {
                                                             model, child) {
                                                       print("remaking");
                                                       return PopupMenuButton(
+                                                        key: _menuKey,
                                                         offset: Offset(0, 50),
                                                         icon: TextFormField(
                                                           focusNode: _focusNode,
@@ -183,6 +184,9 @@ class _DailyPanchangScreenState extends State<DailyPanchangScreen> {
                                                             print("changing");
                                                             model.updateText(
                                                                 value);
+                                                            _menuKey
+                                                                .currentState
+                                                                ?.showButtonMenu();
                                                           },
                                                         ),
                                                         itemBuilder: (context) {
@@ -212,11 +216,7 @@ class _DailyPanchangScreenState extends State<DailyPanchangScreen> {
                                                                       e['placeId']);
                                                                   model
                                                                       .callForPanchang();
-                                                                  _textEditingController
-                                                                      .clear();
-                                                                  model
-                                                                      .updateText(
-                                                                          "");
+
                                                                   _focusNode
                                                                       .unfocus();
                                                                 },
@@ -280,23 +280,34 @@ class _DailyPanchangScreenState extends State<DailyPanchangScreen> {
                             width: 50,
                             child: CircularProgressIndicator())
                         : model.hasPanchangData()
-                            ? ListView.builder(
-                                itemCount: 4,
-                                itemBuilder: (context, index) {
-                                  switch (index) {
-                                    case 1:
-                                      return panchangCard(data['tithi'], index);
-                                    case 2:
-                                      return panchangCard(
-                                          data['nakshatra'], index);
-                                    case 3:
-                                      return panchangCard(data['yog'], index);
-                                    case 4:
-                                      return panchangCard(data['karan'], index);
-                                    default:
-                                      return Container();
-                                  }
-                                })
+                            ? Container(
+                                color: Colors.orange.shade50,
+                                height: height * 0.7,
+                                child: ListView.builder(
+                                    itemCount: 4,
+                                    itemBuilder: (context, index) {
+                                      if (data == null) {
+                                        return Container();
+                                      } else {
+                                        switch (index) {
+                                          case 1:
+                                            return panchangCard(
+                                                data['tithi'], index);
+                                          case 2:
+                                            return panchangCard(
+                                                data['nakshatra'], index);
+                                          case 3:
+                                            return panchangCard(
+                                                data['yog'], index);
+                                          case 4:
+                                            return panchangCard(
+                                                data['karan'], index);
+                                          default:
+                                            return Container();
+                                        }
+                                      }
+                                    }),
+                              )
                             : Container();
                   },
                 ),

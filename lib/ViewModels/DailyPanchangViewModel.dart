@@ -52,6 +52,7 @@ class DailyPanchangViewModel extends BaseModel {
   }
 
   updateLocationTag(String tag) {
+    print("updateLocationTag");
     locationTag = tag;
     notifyListeners();
   }
@@ -75,8 +76,14 @@ class DailyPanchangViewModel extends BaseModel {
   callForPanchang() async {
     print("hi");
     try {
-      if (!panchangData.containsKey(selectedDate)) {
+      if (!panchangData.containsKey(selectedDate) ||
+          panchangData[selectedDate] == null) {
+        print(locationTag);
         if (locationTag != "") {
+          print(selectedDate.day);
+          print(selectedDate.month);
+          print(selectedDate.year);
+          print(locationTag.toString());
           dynamic locationData = await service.callPanchang(selectedDate.day,
               selectedDate.month, selectedDate.year, locationTag);
           panchangData.putIfAbsent(selectedDate, () => locationData);
@@ -87,6 +94,7 @@ class DailyPanchangViewModel extends BaseModel {
       }
     } on Exception catch (e) {
       // TODO
+      print(e);
     }
   }
 
