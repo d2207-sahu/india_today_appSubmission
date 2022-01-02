@@ -10,7 +10,6 @@ class DailyPanchangViewModel extends BaseModel {
   late String locationTag;
   late String changedText;
   Map<DateTime, dynamic> panchangData = Map<DateTime, dynamic>();
-
   String month(int i) {
     switch (i) {
       case 1:
@@ -25,7 +24,6 @@ class DailyPanchangViewModel extends BaseModel {
         return "May";
       case 6:
         return "June";
-
       case 7:
         return "July";
       case 8:
