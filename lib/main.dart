@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:zealth_assignment/ViewModels/AstroViewModel.dart';
 import 'Constant.dart';
 import 'Navigation/Router.dart';
 import 'ViewModels/ConnectivityProvider.dart';
+import 'ViewModels/DailyPanchangViewModel.dart';
 import 'ViewModels/MainViewModel.dart';
 import 'locator.dart';
 
@@ -11,11 +13,11 @@ void main() {
   setupLocator();
   runApp(const MyApp());
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.black,
-    statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.black,
-    systemNavigationBarDividerColor: Colors.blue,
-    systemNavigationBarIconBrightness: Brightness.light,
+    statusBarColor: Colors.white,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: Colors.white,
+    systemNavigationBarDividerColor: Colors.black54,
+    systemNavigationBarIconBrightness: Brightness.dark,
   ));
 }
 
@@ -27,6 +29,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => locator<MainViewModel>()),
+        ChangeNotifierProvider<DailyPanchangViewModel>(
+          create: (_) => locator<DailyPanchangViewModel>(),
+        ),
+        ChangeNotifierProvider<AstroViewModel>(
+          create: (_) => locator<AstroViewModel>(),
+        ),
         ChangeNotifierProvider(create: (_) => locator<ConnectivityProvider>()),
       ],
       child: MaterialApp(
@@ -34,12 +42,12 @@ class MyApp extends StatelessWidget {
         initialRoute: mainRoute,
         theme: ThemeData(
           fontFamily: 'Poppins',
-          primaryColor: Colors.blue,
+          primaryColor: Colors.orange,
         ),
         color: Colors.white,
         navigatorKey: GlobalKey<NavigatorState>(),
         debugShowCheckedModeBanner: false,
-        title: 'Zealth',
+        title: 'India Today',
       ),
     );
   }

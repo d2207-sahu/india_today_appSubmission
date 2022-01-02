@@ -1,17 +1,11 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:zealth_assignment/ViewModels/BaseModel.dart';
 import 'package:zealth_assignment/ViewModels/ConnectivityProvider.dart';
 import 'package:zealth_assignment/ViewModels/MainViewModel.dart';
-import 'package:zealth_assignment/Views/ImageScreen.dart';
-import 'package:zealth_assignment/Views/ProfileScreen.dart';
-import 'package:zealth_assignment/Views/Widgets/ColorButton.dart';
-
-import 'Widgets/CustomDatePicker.dart';
+import 'package:zealth_assignment/Views/AstroSearchScreen.dart';
+import 'package:zealth_assignment/Views/DailyPanchangScreen.dart';
+import 'Widgets/CustomBottomNavigationBar.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -21,215 +15,90 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  PageController? _pageController;
+
+  /// Hitting the back button will make the app closed
+  Future<bool> goBack() async {
+    /// we are checking if the screen is MainScreen. if not than can't leave the app.
+    /// had to move to MainScreen than only can leave the app.
+    if (_pageController!.page == 0.0) {
+      SystemNavigator.pop();
+    } else {
+      Provider.of<MainViewModel>(context, listen: false).changePage(0);
+      _pageController!.animateToPage(
+        0,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      );
+    }
+    //TODO : IOS Differently Handle it.
+    return false;
+  }
+
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     Provider.of<ConnectivityProvider>(context, listen: false).startMonitoring();
-    Provider.of<MainViewModel>(context, listen: false).setRecentDate();
+  }
+
+  @override
+  void dispose() {
+    _pageController?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return Consumer<ConnectivityProvider>(
-        builder: (context, connection, child) {
-          return connection.isOnline
-              ? child ?? Text('Error')
-              : Scaffold(
-                  body: Container(
-                    height: height,
-                    child: Center(
-                      child: Text(
-                        'No Internet Connection',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-        },
-        child: WillPopScope(
-          onWillPop: () async {
-            if (Platform.isAndroid) {
-              SystemNavigator.pop();
-            } else if (Platform.isIOS) {
-              exit(0);
-            }
-            return false;
-          },
-          child: Scaffold(
-            drawer: drawer(),
-            floatingActionButton: Consumer<MainViewModel>(
-              builder:
-                  (BuildContext context, MainViewModel model, Widget? child) {
-                return model.viewState == ViewState.Busy
-                    ? ColoredButton(text: "Loading...", callback: () {})
-                    : ColoredButton(
-                        text: "Show Image",
-                        callback: () async {
-                          await model.getImages();
-                          Navigator.of(context).push(new MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return ImageScreen();
-                          }));
-                        },
-                      );
-              },
-            ),
-            body: SafeArea(
-              top: true,
-              child: Consumer<MainViewModel>(
-                builder: (context, model, child) {
-                  return Container(
-                    color: model.screenColor ?? Colors.grey,
-                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-                    height: height,
-                    width: width,
-                    child: child,
-                  );
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(flex: 1, child: SizedBox()),
-                        Expanded(
-                          flex: 5,
-                          child: Center(
-                            child: Container(
-                              height: height * 0.25,
-                              child: Text(
-                                'Zealth',
-                                style: TextStyle(
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            flex: 1,
-                            child: IconButton(
-                              padding: EdgeInsets.all(10),
-                              icon: Icon(
-                                Icons.account_circle_rounded,
-                                color: Colors.black,
-                              ),
-                              iconSize: 35,
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                    new MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                  return ProfileScreen();
-                                }));
-                              },
-                            )),
-                      ],
-                    ),
-                    Container(
-                      height: height * 0.1,
-                    ),
-                    Container(
-                        height: height * 0.5,
-                        child: Consumer<MainViewModel>(builder:
-                            (BuildContext context, model, Widget? child) {
-                          return Column(
-                            children: [
-                              //The first time the app will be launched, set the default date to 01-01-2000. On the subsequent
-                              // launches of the app, make sure to show the input given by the user during the last use.
-                              Text(
-                                "${model.date.year}-${model.date.month}-${model.date.day}",
-                                style: TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              ColoredButton(
-                                size: 26,
-                                text: "Choose a Date",
-                                callback: () async {
-                                  showModelDatePicker(
-                                      context, model, false, height, width);
-
-                                  /// Could have made the date picker show in the pdf
-                                  /// but it would have required to have 3 listviews
-                                  /// and each listview value would change the values of other two
-                                  /// As this was not compulsory i didn't added it.
-                                  /// But if it is required i will add on the request.
-                                },
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          );
-                        })),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ));
-  }
-
-  Widget drawer() {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-    return SafeArea(
-      child: Container(
-        color: Colors.white,
-        height: height,
-        width: width * 0.8,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: height * 0.125,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: height * 0.08,
+      builder: (context, connection, child) {
+        return connection.isOnline
+            ? child ?? Scaffold(body: Text('Error'))
+            : Scaffold(
+                body: Container(
+                  height: height,
+                  child: Center(
                     child: Text(
-                      'Zealth',
+                      'No Internet Connection',
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
                   ),
-                  Divider(
-                    color: Colors.black,
-                    height: 10,
-                    thickness: 2,
-                  )
-                ],
+                ),
+              );
+      },
+      child: SafeArea(
+          child: WillPopScope(
+              child: SafeArea(
+                child: Scaffold(
+                  body: PageView(
+                    controller: _pageController,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: <Widget>[AstroScreen(), DailyPanchangScreen()],
+                  ),
+                  bottomNavigationBar: Consumer<MainViewModel>(
+                    builder: (context, model, child) {
+                      return CustomBottomNavigationBar(
+                        currentIndex: model.currentPage,
+                        onTap: (index) {
+                          index == model.currentPage
+                              ? print('')
+                              : _pageController?.jumpToPage(
+                                  index,
+                                );
+                          model.changePage(index);
+                        },
+                        list: bottomNavItems,
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-            ColoredButton(
-              callback: () {
-                Navigator.of(context).push(
-                    new MaterialPageRoute(builder: (BuildContext context) {
-                  return ProfileScreen();
-                }));
-              },
-              text: 'Profile',
-            ),
-          ],
-        ),
-      ),
+              onWillPop: goBack)),
     );
   }
 }
